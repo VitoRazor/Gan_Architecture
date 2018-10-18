@@ -204,9 +204,9 @@ class MyGAN():
             # Train the generator (wants discriminator to mistake images as real)
             g_loss = self.combined.train_on_batch(gen_input, [fake, sampled_labels])
             # Plot the progress
-            #print ("%d [D loss: %.2f, acc.: %.2f%%] [Q loss: %.2f] [G loss: %.2f]" % (epoch, d_loss[0], g_loss[1], g_loss[2]))
-            print(d_loss)
-            print(g_loss)
+            print ("%d [D loss: %.2f, c_loss: %.2f] [g loss: %.2f c_g_loss: %.2f]" % (epoch, d_loss[0]-d_loss[3], d_loss[3], g_loss[1],g_loss[2]))
+            #print(d_loss)
+            #print(g_loss)
             self.d_loss.append(d_loss[0])
             self.g_loss.append(g_loss[1])
             self.c_loss.append(g_loss[2])
