@@ -115,7 +115,8 @@ class MyGAN():
         self.classify.trainable = False
         self.generator.trainable = True
         self.combined.compile(loss=[resgan.wasserstein_loss,"categorical_crossentropy"],
-            optimizer=optimizer)
+            optimizer=optimizer,
+            loss_weights=[1, 1])
         #keras.utils.plot_model(self.combined, to_file=saved_model_path+'/model_2.png', show_shapes=True, show_layer_names=True)
     def save_imgs(self, epoch):
         r, c = 10, 10
@@ -174,7 +175,6 @@ class MyGAN():
     def train(self, epochs, batch_size=128, save_interval=50):
         # Adversarial ground truths
         (X_train, y_train), (_, _) = mnist.load_data()
-
         # Rescale -1 to 1
         X_train = (X_train.astype(np.float32) - 127.5) / 127.5
         X_train = np.expand_dims(X_train, axis=3)
@@ -191,12 +191,13 @@ class MyGAN():
             #imgs=next(gene)
             idx = np.random.randint(0, X_train.shape[0], batch_size)
             imgs = X_train[idx]
+            img_labels=to_categorical(y_train[idx],self.classes)
             sampled_noise, sampled_labels = self.sample_generator_input(batch_size)
             gen_input = np.concatenate((sampled_noise, sampled_labels), axis=1)
             #noise = np.random.normal(0, 1, (batch_size, self.latent_dim))
             # Train the discriminator (real classified as ones and generated as zeros)
             d_loss = self.discriminator.train_on_batch([imgs, gen_input],
-                                                [valid, fake,sampled_labels])
+                                                [valid, fake,img_labels])
 
             # ---------------------
             #  Train Generator
