@@ -74,7 +74,7 @@ class MyGAN():
             print("load discriminator weights")
         if os.path.exists(saved_model_path+"/classify_weights.h5"):
             self.classify.load_weights(saved_model_path+"/classify_weights.h5")
-            print("load discriminator weights")
+            print("load classify weights")
 
         
         # Noise input
@@ -204,7 +204,7 @@ class MyGAN():
             # Train the generator (wants discriminator to mistake images as real)
             g_loss = self.combined.train_on_batch(gen_input, [fake, sampled_labels])
             # Plot the progress
-            print ("%d [D loss: %.2f, c_loss: %.2f] [g loss: %.2f c_g_loss: %.2f]" % (epoch, d_loss[0]-d_loss[3], d_loss[3], g_loss[1],g_loss[2]))
+            print ("%d [D loss: %.2f, c_loss: %.2f] [g loss: %.2f c_g_loss: %.2f]" % (epoch, d_loss[1]+d_loss[2], d_loss[3], g_loss[1],g_loss[2]))
             #print(d_loss)
             #print(g_loss)
             self.d_loss.append(d_loss[0])
