@@ -229,4 +229,4 @@ class MyGAN():
                 self.plot_log()
 if __name__ == '__main__':
     mygan = MyGAN()
-    mygan.train(epochs=500000, batch_size=32, save_interval=100)
+    mygan.train(epochs=500000, batch_size=8, save_interval=100)

@@ -97,7 +97,8 @@ def critic_block(input_tensor, filters, scale, stage, using_sn=False, kernel_siz
         shortcut = Conv2D(filters2, (1, 1), strides=(1,1),padding="same",
                     name=conv_name_base + '1')(shortcut)
     x = BatchNormalization(axis=bn_axis, name=bn_name_base + 'a',gamma_constraint=spectral_normalization)(input_tensor)
-    x = Activation('relu')(x) 
+    x = LeakyReLU(alpha=0.2)(x)
+    x = Dropout(0.25)(x)
     if scale =="down":
         x = Conv2D(filters1, kernel_size, strides=strides,padding="same",
                name=conv_name_base + 'a',kernel_constraint=spectral_normalization)(x)
@@ -106,7 +107,8 @@ def critic_block(input_tensor, filters, scale, stage, using_sn=False, kernel_siz
                name=conv_name_base + 'a',kernel_constraint=spectral_normalization)(x)
 
     x = BatchNormalization(axis=bn_axis, name=bn_name_base + 'b',gamma_constraint=spectral_normalization)(x)
-    x = Activation('relu')(x)
+    x = LeakyReLU(alpha=0.2)(x)
+    x = Dropout(0.25)(x)
     x = Conv2D(filters2, (1, 1), strides=(1,1),padding="same",
                name=conv_name_base + 'b',kernel_constraint=spectral_normalization)(x)
     x = layers.add([x, shortcut])

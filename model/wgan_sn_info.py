@@ -66,7 +66,8 @@ class ResGAN_info():
             x =critic_block(x,filters=magic[block_idx],scale=scales[block_idx],stage=block_idx+1,using_sn=True)
 
         x = BatchNormalization(axis=3,name="bn_last",gamma_constraint=spectral_normalization)(x)
-        x = Activation('relu')(x)
+        x = LeakyReLU(alpha=0.2)(x)
+        x = Dropout(0.25)(x)
         x = Flatten()(x)
         pre_model = Model(img,x)
         img_embedding= pre_model(img)
