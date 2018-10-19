@@ -27,7 +27,7 @@ import os
 import numpy as np
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-path = "wgan_sn_info"
+path = "../wgan_sn_info"
 if not os.path.exists(path):
     os.mkdir(path)
 
@@ -55,6 +55,7 @@ class MyGAN():
         self.c_loss=[]
         self.n_critic = 2
         self.n_gen = 2
+        self.ite = 0
         resgan=ResGAN_info(self.img_rows,self.img_cols,self.channels,self.latent_dim, self.classes)
         #self.data_loader = DataLoader(dataset_name=self.dataset_name,
         #                              img_res= self.img_shape)
@@ -65,29 +66,17 @@ class MyGAN():
         # Build and compile the critic
         self.critic, self.classify = resgan.build_critic()
         self.generator = resgan.build_generator()
-        # load model weights
-        if os.path.exists(saved_model_path+"/discriminator_weights.h5"):
-            self.critic.load_weights(saved_model_path+"/discriminator_weights.h5")
-            print("load generator weights")
-        if os.path.exists(saved_model_path+"/generator_weights.h5"):
-            self.generator.load_weights(saved_model_path+"/generator_weights.h5")
-            print("load discriminator weights")
-        if os.path.exists(saved_model_path+"/classify_weights.h5"):
-            self.classify.load_weights(saved_model_path+"/classify_weights.h5")
-            print("load classify weights")
-
-        
+        # load model weights and log
+        self.load_train()
         # Noise input
         z_disc = Input(shape=(self.latent_dim,))
         # Generate image based of noise (fake sample and real sample)
         fake_img = self.generator(z_disc)
         real_img = Input(shape=self.img_shape)
-
         # Discriminator determines validity of the real and fake images
         fake = self.critic(fake_img)
         valid = self.critic(real_img)
         real_label=self.classify(real_img)
-
         self.critic.trainable = True
         self.classify.trainable = True
         self.generator.trainable = False
@@ -97,9 +86,6 @@ class MyGAN():
             optimizer=optimizer,
             loss_weights=[-1, -1, 1]
             )
-
-
-        
         #keras.utils.plot_model(self.critic, to_file=saved_model_path+'/model_1.png', show_shapes=True, show_layer_names=True)
         # Build the generator
         
@@ -158,11 +144,17 @@ class MyGAN():
         c_loss=np.array(self.c_loss)
         np.save(saved_log+"/c_loss.npy",c_loss)
     def plot_log(self):
-        r = 3 
-        fig, axs = plt.subplots(r)
-        axs[0].plot(self.d_loss)
-        axs[1].plot(self.g_loss)
-        axs[2].plot(self.c_loss)
+        r,c = 3,1 
+        def sub_plt(data,idx,x_label,y_label,color):
+            plt.subplot(r,c,idx)
+            plt.xlabel(x_label)
+            plt.ylabel(y_label)
+            plt.plot(data,color=color)
+        fig=plt.figure(figsize=(16,12),dpi=200)
+        plt.title("loss")
+        sub_plt(self.d_loss,1,"iter","d_loss","blue")
+        sub_plt(self.g_loss,2,"iter","g_loss","red")
+        sub_plt(self.c_loss,3,"iter","c_loss","green")
         fig.savefig(saved_log+"/log.png" )
         plt.close()
     def sample_generator_input(self, batch_size):
@@ -172,6 +164,22 @@ class MyGAN():
         sampled_labels = to_categorical(sampled_labels, num_classes=self.classes)
 
         return sampled_noise, sampled_labels
+    def load_train(self):
+        if os.path.exists(saved_model_path+"/discriminator_weights.h5"):
+            self.critic.load_weights(saved_model_path+"/discriminator_weights.h5")
+            print("load generator weights")
+        if os.path.exists(saved_model_path+"/generator_weights.h5"):
+            self.generator.load_weights(saved_model_path+"/generator_weights.h5")
+            print("load discriminator weights")
+        if os.path.exists(saved_model_path+"/classify_weights.h5"):
+            self.classify.load_weights(saved_model_path+"/classify_weights.h5")
+            print("load classify weights")
+        if os.path.exists(saved_log+"/g_loss.npy"):
+            self.g_loss=(np.load(saved_log+"/g_loss.npy")).tolist()
+            self.d_loss=(np.load(saved_log+"/d_loss.npy")).tolist()
+            self.c_loss=(np.load(saved_log+"/c_loss.npy")).tolist()
+            self.ite=len(self.g_loss)
+            print("load log")
     def train(self, epochs, batch_size=128, save_interval=50):
         # Adversarial ground truths
         (X_train, y_train), (_, _) = mnist.load_data()
@@ -183,7 +191,7 @@ class MyGAN():
         valid = np.ones((batch_size, 1))
         fake = -np.ones((batch_size, 1))
         #gene=self.data_loader.load_batch(batch_size)
-        for epoch in range(epochs):
+        for epoch in range(self.ite,epochs):
             # ---------------------
             #  Train Discriminator
             # ---------------------
@@ -215,10 +223,10 @@ class MyGAN():
             # If at save interval => save generated image samples
             if epoch % save_interval == 0:
                 self.save_imgs(epoch)
-            if epoch % (save_interval) == 0:
+            if epoch % (save_interval*10) == 0:
                 self.save_model()
                 self.save_log()
                 self.plot_log()
 if __name__ == '__main__':
     mygan = MyGAN()
-    mygan.train(epochs=500000, batch_size=4, save_interval=50)
+    mygan.train(epochs=500000, batch_size=32, save_interval=100)

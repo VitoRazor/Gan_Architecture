@@ -1,0 +1,6 @@
+{
+    "debug.allowBreakpointsEverywhere": true,
+    "terminal.integrated.shell.windows": "cmd.exe",
+    "python.pythonPath": "G:\\Programme\\Anaconda\\envs\\python3\\python",
+    "window.zoomLevel": 1
+}

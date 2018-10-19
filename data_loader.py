@@ -3,15 +3,16 @@ import scipy
 from glob import glob
 import random
 import cv2
-
+path='../datasets'
 class DataLoader():
     def __init__(self, dataset_name, img_res=(64,64,1)):
         self.dataset_name=dataset_name
         self.img_res=img_res
+        self.path='../datasets'
     def load_data(self, batch_size=1, is_testing=False):
         data_type = "train" if not is_testing else "val"
         #glob.glob()-----list all file paths
-        path = glob('./datasets/%s/%s/*' % (self.dataset_name, data_type))
+        path = glob(self.path+'/%s/%s/*' % (self.dataset_name, data_type))
         batch = np.random.choice(path, size=batch_size)
 
         imgs_A=[]
@@ -26,7 +27,7 @@ class DataLoader():
 
     def load_batch(self, batch_size=1, is_testing=False):
         data_type = "train" if not is_testing else "val"
-        path = glob('./datasets/%s/%s/*' % (self.dataset_name, data_type))
+        path = glob(self.path+'/%s/%s/*' % (self.dataset_name, data_type))
 
         # shuffle the datasets
 

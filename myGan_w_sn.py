@@ -26,7 +26,7 @@ import os
 import numpy as np
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-path = "wgan_sn_meizi"
+path = "../wgan_sn_meizi"
 if not os.path.exists(path):
     os.mkdir(path)
 
@@ -52,6 +52,7 @@ class MyGAN():
         self.g_loss=[]
         self.n_critic = 2
         self.n_gen = 2
+        self.ite = 0
         resgan=ResGAN(self.img_rows,self.img_cols,self.channels,self.latent_dim)
         self.data_loader = DataLoader(dataset_name=self.dataset_name,
                                       img_res= self.img_shape)
@@ -64,15 +65,8 @@ class MyGAN():
         # Build and compile the critic
         self.critic = resgan.build_critic()
         self.generator = resgan.build_generator()
-        # load model weights
-        if os.path.exists(saved_model_path+"/discriminator_weights.hdf5"):
-            self.critic.load_weights(saved_model_path+"/discriminator_weights.hdf5")
-            print("load generator weights")
-        if os.path.exists(saved_model_path+"/generator_weights.hdf5"):
-            self.generator.load_weights(saved_model_path+"/generator_weights.hdf5")
-            print("load discriminator weights")
-
-        
+        # load model weights and log
+        self.load_train()
         # Noise input
         z_disc = Input(shape=(self.latent_dim,))
         # Generate image based of noise (fake sample and real sample)
@@ -145,18 +139,41 @@ class MyGAN():
         g_loss=np.array(self.g_loss)
         np.save(saved_log+"/g_loss.npy",g_loss)
     def plot_log(self):
-        r = 2 
-        fig, axs = plt.subplots(r)
-        axs[0].plot(self.d_loss)
-        axs[1].plot(self.g_loss)
+        r,c = 2,1 
+        def sub_plt(data,idx,x_label,y_label,color):
+            plt.subplot(r,c,idx)
+            plt.xlabel(x_label)
+            plt.ylabel(y_label)
+            plt.plot(data,color=color)
+        fig=plt.figure(figsize=(16,12),dpi=200)
+        plt.title("loss")
+        sub_plt(self.d_loss,1,"iter","d_loss","blue")
+        sub_plt(self.g_loss,2,"iter","g_loss","red")
+        #sub_plt(self.c_loss,3,"iter","c_loss","green")
         fig.savefig(saved_log+"/log.png" )
         plt.close()
+    def load_train(self):
+        if os.path.exists(saved_model_path+"/discriminator_weights.h5"):
+            self.critic.load_weights(saved_model_path+"/discriminator_weights.h5")
+            print("load generator weights")
+        if os.path.exists(saved_model_path+"/generator_weights.h5"):
+            self.generator.load_weights(saved_model_path+"/generator_weights.h5")
+            print("load discriminator weights")
+        # if os.path.exists(saved_model_path+"/classify_weights.h5"):
+        #     self.classify.load_weights(saved_model_path+"/classify_weights.h5")
+        #    print("load classify weights")
+        if os.path.exists(saved_log+"/g_loss.npy"):
+            self.g_loss=(np.load(saved_log+"/g_loss.npy")).tolist()
+            self.d_loss=(np.load(saved_log+"/d_loss.npy")).tolist()
+            # self.c_loss=(np.load(saved_log+"/c_loss.npy")).tolist()
+            self.ite=len(self.g_loss)
+            print("load log")
     def train(self, epochs, batch_size=128, save_interval=50):
         # Adversarial ground truths
         valid = np.ones((batch_size, 1))
         fake = -np.ones((batch_size, 1))
         gene=self.data_loader.load_batch(batch_size)
-        for epoch in range(epochs):
+        for epoch in range(self.ite,epochs):
             # ---------------------
             #  Train Discriminator
             # ---------------------
@@ -164,7 +181,6 @@ class MyGAN():
             # Select a random half of images
                 imgs=next(gene)
                 noise = np.random.normal(0, 1, (batch_size, self.latent_dim))
-
                 # Train the discriminator (real classified as ones and generated as zeros)
                 d_loss = self.discriminator.train_on_batch([imgs, noise],
                                                     [valid, fake])
