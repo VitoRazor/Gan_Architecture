@@ -4,8 +4,8 @@ implementations
 ## Table of Contents
   * [Installation](#installation)
   * [Implementations](#implementations)
-    + [Spectral Normalization](# GAN with SN)  
-    + [GAN with Info](# GAN with info)
+    + [Spectral Normalization](#GAN-SN)  
+    + [GAN with Info](#GAN-info)
 
 ## Installation
     $ git clone https://github.com/VitoRazor/Gan_Architecture.git
@@ -13,7 +13,7 @@ implementations
     $ pip install keras
 
 ## Implementations   
-### GAN with SN
+### GAN-SN
 Implementation of Generative Adversarial Network with Spectral Normalization for Wasserstein-divergence 
 
 [Code](myGan_w_sn.py)
@@ -35,7 +35,7 @@ Train fro aerial image 64x64[iteration=150000] and 256x256[iteration=34800]
     <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan/example_34800.png" width="400"\>
 </p>
 
-### GAN with info
+### GAN-info
 Implementation of Generative Adversarial Network with InfoGAN and ACGAN, simultaneously using Spectral Normalization for Wasserstein-divergence.
 
 [Code](myGan_info.py)
