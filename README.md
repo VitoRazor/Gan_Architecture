@@ -25,6 +25,15 @@ Spectral normalization for generative adversarial networks:https://arxiv.org/abs
 Wasserstein GAN: https://arxiv.org/abs/1701.07875
 
 Result:
+Train fro cartoon characters 64x64 
+ <p align="center">
+    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan/example_100000.png" width="650"\>
+</p>
+Train fro aerial image 64x64[iteration=150000] and 256x256[iteration=34800]
+ <p align="center">
+    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan/example_150000.png" width="400"\>
+    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan/example_34800.png" width="400"\>
+</p>
 
 ### GAN with info
 Implementation of Generative Adversarial Network with InfoGAN and ACGAN, simultaneously using Spectral Normalization for Wasserstein-divergence.
