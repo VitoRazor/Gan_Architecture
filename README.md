@@ -40,10 +40,10 @@ Interpretable Representation Learning by Information Maximizing Generative Adver
 Result:
 from iteration 10 to iteration 15000
 <p align="left">
-    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_100.png" width="500"\>
-    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_10000.png" width="500"\>
+    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_100.png" width="450"\>
+    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_10000.png" width="450"\>
 </p>
 <p align="center">
-    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_15000.png" width="500"\>
+    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_15000.png" width="450"\>
 </p>
 
