@@ -39,10 +39,7 @@ Interpretable Representation Learning by Information Maximizing Generative Adver
                  
 Result:
 <p align="left">
-<<<<<<< HEAD
-    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_100.png" width="640"\>
-=======
-    <img src="http://eriklindernoren.se/images/aae.png" width="640"\>
->>>>>>> 6da03db8af6b8ebdded041e38576fb19c497e28d
+    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_100.png" width="400"\>
+    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_10000.png" width="400"\>
 </p>
 
