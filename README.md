@@ -38,8 +38,11 @@ Auxiliary Classifier Generative Adversarial Network: https://arxiv.org/abs/1610.
 Interpretable Representation Learning by Information Maximizing Generative Adversarial Nets: https://arxiv.org/abs/1606.03657                                             
                  
 Result:
+
+from iteration 10 to iteration 15000
 <p align="left">
     <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_100.png" width="400"\>
     <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_10000.png" width="400"\>
+    <img src="https://github.com/VitoRazor/Gan_Architecture/blob/master/result/Gan_info/example_15000.png" width="400"\>
 </p>
 
