@@ -108,6 +108,7 @@ class MyGAN():
         # Rescale images 0 - 1
         gen_imgs = 0.5 * gen_imgs + 0.5
         fig, axs = plt.subplots(r, c)
+        fig.set_size_inches(16, 12)
         cnt = 0
         for i in range(r):
             for j in range(c):
@@ -117,12 +118,12 @@ class MyGAN():
                     axs[i,j].imshow(gen_imgs[cnt,:,:,0],"gray")
                 axs[i,j].axis('off')
                 cnt += 1
-        fig.savefig(ouput_images_path+"/example_%d.png" % epoch)
+        fig.savefig(ouput_images_path+"/example_%d.png" % epoch,dpi=200)
         plt.close()
     def save_model(self):
         def save(model, model_name):
             model_path = saved_model_path +"/%s.json" % model_name
-            weights_path = saved_model_path +"/%s_weights.hdf5" % model_name
+            weights_path = saved_model_path +"/%s_weights.h5" % model_name
             options = {"file_arch": model_path,
                         "file_weight": weights_path}
             json_string = model.to_json()
